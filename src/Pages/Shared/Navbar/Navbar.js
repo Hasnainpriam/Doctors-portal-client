@@ -3,13 +3,15 @@ import { Link, NavLink } from 'react-router-dom';
 import logo from '../../../assets/icons8-microbeam-radiation-therapy-48.png'
 
 const Navbar = () => {
-    const menuItems = <React.Fragment>
+  
+  const menuItems = <React.Fragment>
     <li><Link to="/">Home</Link></li>
     <li><Link to="/appointment">Appointment</Link></li>
     <li><Link to="/about">About</Link></li>
     <li><Link to="/reviews">Reviews</Link></li>
     <li><Link to="/login">Login</Link></li>
 </React.Fragment>
+
   return (
     <div className="navbar bg-base-100 flex justify-between max-w-[1440px] my-2">
     <div className="navbar-start">
@@ -24,7 +26,7 @@ const Navbar = () => {
         <Link to="/" className="btn btn-ghost normal-case lg:text-3xl font-bold"><img src={logo} alt="" /> Doctors Portal</Link>
     </div>
     <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal p-0">
+        <ul className="menu  menu-horizontal p-0">
             {menuItems}
         </ul>
     </div>
