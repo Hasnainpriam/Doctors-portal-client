@@ -24,10 +24,10 @@ const SignUp = () => {
                     displayName: data.name
                 }
                 
-                navigate('/');
-
                 updateUser(userInfo)
-                    .then(() => { })
+                    .then(() => { 
+                        navigate('/');
+                    })
                     .catch(err => console.log(err));
             })
             .catch(error => {
