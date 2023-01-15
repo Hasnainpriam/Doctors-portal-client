@@ -20,8 +20,6 @@ root.render(
       <App />
      </AuthProvider>
     </QueryClientProvider>
- 
-   
   </React.StrictMode>
 );
 
