@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider';
 import useAdmin from '../../hooks/useAdmin';
+import Loading from '../../Pages/Loading/Loading';
 
 const AdminRoute = ({children}) => {
 
@@ -11,11 +12,7 @@ const AdminRoute = ({children}) => {
   const location=useLocation();
 
   if(loading || isAdminLoading){
-    return (
-      <div className="grid justify-items-center my-6 ">
-      <button className="btn btn-lg btn-ghost loading ">loading</button>
-    </div>
-    )
+    return <Loading></Loading>
   }
 
   if(user && isAdmin){

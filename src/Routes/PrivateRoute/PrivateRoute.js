@@ -1,17 +1,14 @@
 import React, { useContext } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../../contexts/AuthProvider'
+import Loading from '../../Pages/Loading/Loading'
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext)
   const location = useLocation()
 
   if (loading) {
-    return (
-      <div className="grid justify-items-center my-6 ">
-        <button className="btn btn-lg btn-ghost loading ">loading</button>
-      </div>
-    )
+    return <Loading></Loading>
   }
 
   if (user) {

@@ -18,11 +18,7 @@ const AvailableAppointments = ({ selectedDate }) => {
         }
     });
     if(isLoading){
-        return (
-            <div className="grid justify-items-center my-6 ">
-              <button className="btn btn-lg btn-ghost loading ">loading</button>
-            </div>
-          )
+        return <Loading></Loading>
     }
   return (
       <section className='my-16'>
