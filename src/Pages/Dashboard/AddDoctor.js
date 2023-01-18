@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,6 @@ import Loading from '../Loading/Loading';
 const AddDoctor = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm();
-
   const imageHostKey = process.env.REACT_APP_imgbb_key;
 
   const navigate = useNavigate();
@@ -45,7 +44,7 @@ const AddDoctor = () => {
                   }
 
                   // save doctor information to the database
-                  fetch('http://localhost:5000/doctors', {
+                  fetch('http://localhost:5000/doctors', {            
                       method: 'POST',
                       headers: {
                           'content-type': 'application/json', 
@@ -69,7 +68,7 @@ const AddDoctor = () => {
 
   return (
     <div className='w-96 p-7'>
-    <h2 className="text-4xl">Add A Doctor</h2>
+    <h2 className="text-4xl my-4">Add A Doctor</h2>
     <form onSubmit={handleSubmit(handleAddDoctor)}>
         <div className="form-control w-full max-w-xs">
             <label className="label"> <span className="label-text">Name</span></label>
@@ -107,7 +106,7 @@ const AddDoctor = () => {
             })} className="input input-bordered w-full max-w-xs" />
             {errors.img && <p className='text-red-500'>{errors.img.message}</p>}
         </div>
-        <input className='btn btn-primary w-full mt-4' value="Add Doctor" type="submit" />
+        <input className='btn btn-primary w-full mt-4'  value="Add Doctor" type="submit" />
     </form>
 </div>
 );
