@@ -1,5 +1,7 @@
+import { GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider';
 import useToken from '../../hooks/useToken';
@@ -7,12 +9,14 @@ import useToken from '../../hooks/useToken';
 
 const Login = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const { signIn } = useContext(AuthContext);
+    const { signIn ,signInWithGoogle,updateUser} = useContext(AuthContext);
     const [loginError, setLoginError] = useState('');
     const [loginUserEmail, setLoginUserEmail] = useState('');
     const [token] = useToken(loginUserEmail);
     const location = useLocation();
     const navigate = useNavigate();
+
+    const googleProvider = new GoogleAuthProvider();
 
     const from = location.state?.from?.pathname || '/';
 
@@ -34,6 +38,67 @@ const Login = () => {
                 setLoginError(error.message);
             });
     }
+
+ 
+
+
+
+    const handlGoogleSubmit = () => {
+        signInWithGoogle(googleProvider)
+          .then((result) => {
+            const user = result.user
+            console.log(user);
+            navigate(from, { replace: true })
+            toast('Successfully logged in!')
+
+            if(!user.displayName){
+
+                const userInfo = {
+                    displayName:user?.email?.split("@")[0].toUpperCase()
+                }
+                updateUser(userInfo)
+                .then(() => {
+                    console.log('inside');
+                    saveUser(user.displayName, user.email);
+                })
+                .catch(err => console.log(err));
+            }
+            else{
+                const userInfo = {
+                    displayName: user.displayName
+                }
+                console.log(userInfo);
+
+                updateUser(userInfo)
+                    .then(() => {
+                        console.log('inside');
+                        saveUser(user.displayName, user.email);
+                    })
+                    .catch(err => console.log(err));
+            }
+          })
+          .catch((error) =>{
+            toast('Something went wrong!')
+          })
+      }
+
+      const saveUser = (name, email) =>{
+        const user ={name, email};
+        console.log(user);
+        fetch('http://localhost:5000/users', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        .then(res => res.json())
+        .then(data =>{
+            console.log(data);
+            console.log('confirm');
+        })
+    }
+
 
     return (
         <div className='h-[650px] flex justify-center items-center'>
@@ -57,7 +122,9 @@ const Login = () => {
                                 minLength: { value: 6, message: 'Password must be 6 characters or longer' }
                             })}
                             className="input input-bordered w-full max-w-xs" />
-                        <label className="label"> <span className="label-text">Forget Password?</span></label>
+<Link to='/forgotpassword'>
+<label className="label"> <span className="label-text text-primary mb-2">Forget Password?</span></label>
+</Link>
                         {errors.password && <p className='text-red-600'>{errors.password?.message}</p>}
                     </div>
                     <input className='btn btn-primary w-full' value="Login" type="submit" />
@@ -67,7 +134,7 @@ const Login = () => {
                 </form>
                 <p className='text-center my-2'>New to Doctors Portal ? <Link className='text-accent-focus' to="/signup">Create new Account</Link></p>
                 <div className="divider">OR</div>
-                <button className='btn btn-outline w-full'>CONTINUE WITH GOOGLE</button>
+                <button onClick={handlGoogleSubmit} className='btn btn-outline w-full'>CONTINUE WITH GOOGLE</button>
             </div>
         </div>
     );

@@ -1,3 +1,4 @@
+import { GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -7,11 +8,14 @@ import useToken from '../../hooks/useToken';
 
 const SignUp = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const { createUser, updateUser } = useContext(AuthContext);
+    const { createUser, updateUser ,signInWithGoogle} = useContext(AuthContext);
     const [signUpError, setSignUPError] = useState('');
     const [createdUserEmail, setCreatedUserEmail] = useState('')
     const [token] = useToken(createdUserEmail);
     const navigate = useNavigate();
+
+    const googleProvider = new GoogleAuthProvider();
+
 
     if(token){
         navigate('/');
@@ -39,6 +43,46 @@ const SignUp = () => {
             });
     }
 
+    
+    const handlGoogleSubmit = () => {
+        signInWithGoogle(googleProvider)
+          .then((result) => {
+            const user = result.user
+            console.log(user);
+            navigate('/')
+            toast('Successfully logged in!')
+
+            if(!user.displayName){
+
+                const userInfo = {
+                    displayName:user?.email?.split("@")[0].toUpperCase()
+                }
+                updateUser(userInfo)
+                .then(() => {
+                    console.log('inside');
+                    saveUser(user.displayName, user.email);
+                })
+                .catch(err => console.log(err));
+            }
+            else{
+                const userInfo = {
+                    displayName: user.displayName
+                }
+                console.log(userInfo);
+
+                updateUser(userInfo)
+                    .then(() => {
+                        console.log('inside');
+                        saveUser(user.displayName, user.email);
+                    })
+                    .catch(err => console.log(err));
+            }
+          })
+          .catch((error) =>{
+            toast('Something went wrong!')
+          })
+      }
+
     const saveUser = (name, email) =>{
         const user ={name, email};
         fetch('http://localhost:5000/users', {
@@ -51,6 +95,8 @@ const SignUp = () => {
         .then(res => res.json())
         .then(data =>{
             setCreatedUserEmail(email);
+            console.log(data);
+            console.log('confirm');
         })
     }
 
@@ -89,7 +135,7 @@ const SignUp = () => {
                 </form>
                 <p className='text-center my-2'>Already have an account ? <Link className='text-accent-focus' to="/login">Please Login</Link></p>
                 <div className="divider">OR</div>
-                <button className='btn btn-outline w-full'>CONTINUE WITH GOOGLE</button>
+                <button onClick={handlGoogleSubmit} className='btn btn-outline w-full'>CONTINUE WITH GOOGLE</button>
 
             </div>
         </div>

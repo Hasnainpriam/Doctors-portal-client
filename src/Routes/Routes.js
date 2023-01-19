@@ -1,13 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
 import DashboardLayout from "../Layout/DashboardLayout";
 import Main from "../Layout/Main";
+import About from "../Pages/About/About";
 import Appointment from "../Pages/Appointment/Appointment/Appointment";
 import AddDoctor from "../Pages/Dashboard/AddDoctor";
+import AllAppointments from "../Pages/Dashboard/AllAppointments";
 import AllUsers from "../Pages/Dashboard/AllUsers";
 import ManageDoctors from "../Pages/Dashboard/ManageDoctors";
 import MyAppointment from "../Pages/Dashboard/MyAppointment";
 import Payment from "../Pages/Dashboard/Payment/Payment";
 import Home from "../Pages/Home/Home/Home";
+import ForgotPassword from "../Pages/Login/ForgotPassword";
 import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/SignUp/SignUp";
 import AdminRoute from "./AdminRoute/AdminRoute";
@@ -28,7 +31,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/about',
-                element: <Home></Home>
+                element: <About></About>
             },
             {
                 path: '/reviews',
@@ -53,6 +56,10 @@ const router = createBrowserRouter([
             {
                 path: '/signup',
                 element: <SignUp></SignUp>
+            },
+            {
+                path: '/forgotpassword',
+                element: <ForgotPassword></ForgotPassword>
             }
            
         ]
@@ -68,6 +75,10 @@ const router = createBrowserRouter([
             {
                 path: '/dashboard/allusers',
                 element: <AdminRoute><AllUsers></AllUsers></AdminRoute>
+            },
+            {
+                path: '/dashboard/allappointments',
+                element: <AdminRoute><AllAppointments></AllAppointments></AdminRoute>
             },
             {
                 path: '/dashboard/adddoctor',
